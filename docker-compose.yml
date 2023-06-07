@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  nginx:
+    container_name: hosted-documentation-nginx
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "192.168.1.102:1008:80"
+    volumes:
+      - hosted-documentation-volume:/usr/share/nginx/html
+volumes:
+  hosted-documentation-volume:
+    name: "hosted-documentation-volume"

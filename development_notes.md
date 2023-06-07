@@ -1,6 +1,6 @@
 # hosted_documentation
 
-Last update: 2023-04-30 23:34
+Last update: 2023-06-07 23:53
 <br><br>
 
 ## Development Notes for hosted_documentation
@@ -28,3 +28,41 @@ Last update: 2023-04-30 23:34
     - ` sudo docker exec -it hosted-documentation-container sh `
         - Not there
         - I'll look into it in the future.
+4. Creating the initial Python file.
+    - Added a line in Dockerfile to create a directory - ` RUN mkdir -p /Pages `.
+        - Checking it worked
+            - Yep. Worked fine
+    - Wrote some code to create the file
+    - Testing it
+        - Nope, going to need two containers linked with a volume.
+        - That's the next step.
+5. Making a docker-compose.yml file.
+    ` docker compose up -d `
+    - Accessible at http://192.168.1.102:1008/
+6. Creating a volume
+    - Adding a line to the *docker-compose.yml*
+    - Checking that files persist
+    - ` sudo docker exec -it hosted-documentation-container sh `
+    - ` cd volume `
+    - ` touch test.txt `
+    - Restarted the container
+    - Checked it was there
+        - Yep, *test.txt* was there!
+    - Deleting the old volume
+        - ` docker volume rm hosted-documentation-volume `
+    - Making the volume link to the "/usr/share/nginx/html" directory
+    - ` docker compose up -d `
+    - ` sudo docker exec -it hosted-documentation-nginx sh `
+    - Making a test file called *test.html*
+        - ` echo Does this work? > test.html `
+        - Go to it at http://192.168.1.102:1008/test.html
+    - Checking that it still exists after a restart
+        - ` docker compose down `
+        - ` docker compose up -d `
+        - Yep, the file is still there!
+    - Does it survive a rebuild?
+        - ` docker compose down `
+        - ` docker compose up -d --build `
+        - Yep, the file is still there because the volume was not recreated
+        - Perfect.
+    - Next step is to create another Dockerfile to run the main.py script and create a HTML file inside of the volume.
