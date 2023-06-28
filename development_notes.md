@@ -66,3 +66,61 @@ Last update: 2023-06-07 23:53
         - Yep, the file is still there because the volume was not recreated
         - Perfect.
     - Next step is to create another Dockerfile to run the main.py script and create a HTML file inside of the volume.
+7. Making the Dockerfile for the API
+    - Split the Python into its own folder
+    - Make the api.Dockerfile
+    - Added it to docker-compose.yml
+    - ` docker compose up -d `
+    - Checking that the main.py script was run
+        - Changed the location that the main.py outputs to
+        - ` sudo docker exec -it hosted-documentation-nginx sh `
+        - ` cd /usr/share/nginx/html/ `
+        - ` cat ExamplePython.html `
+            - Yep, its there!
+8. Making a real HTML file from it
+    - Adapting main.py
+    - Trying to make it read the correct file#
+    - Doesnt seem to be copying "Vault" into the right location.
+    - Changed it to have two volumes - one for the vault and another for the HTML
+    - The python script still isn't outputting into the right place
+    - Got it working. The HTML_path was not correct.
+9. Been a while. Trying to run it.
+    - ` docker compose up -d `
+    - Looking inside of the nginx container
+        - ` docker exec -it hosted-documentation-nginx sh `
+        - Looks like the Example.md file is converted
+            - http://192.168.1.113:1008/Example.html
+    - Making a *Test.md* file inside of "Vault" to see if it is converted
+        - Changed the file referenced in *main.py* to be Test.md instead
+        - Added the *Test.md* file
+        - ` docker compose down `
+        - ` docker compose up -d `
+        - ` docker exec -it hosted-documentation-nginx sh `
+        - ` cd /usr/share/nginx/html `
+        - Nope, it isnt there
+        - ` cd ./Vault `
+            - Nope, it isnt in there
+            - So the volume needs to be recreated
+        - ` docker compose down `
+        - ` docker compose up --force-recreate -d `
+            - Nope, the file still isnt in the vault
+    - ` docker volume ls `
+        - Both the html and vault volumes show up
+    - Maybe it just needs to be rebuild
+        - ` docker compose down `
+        - ` docker compose up --build -d `
+        - Nope
+    - So why is the content of Vault not being copied into the volume?
+    - ` docker compose rm -f `
+    - ` docker compose build --no-cache `
+    - ` docker compose up -d `
+    - Nope, Test.md still isnt inside of Vault
+    - ` docker compose down -v `
+    - ` docker compose build --no-cache `
+    - ` docker compose up -d `
+    - ` docker exec -it hosted-documentation-nginx sh `
+        - The Test.md file is there!
+        - http://192.168.1.113:1008/Test.html
+            - It shows the file!
+    - So, in summary: The volume needs to be recreated to work.
+10. Making it so that all Markdown files inside of "Vault" are converted into .html, not just specific ones
