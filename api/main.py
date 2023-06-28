@@ -1,5 +1,25 @@
 """Main script to convert Markdown files into HTML files."""
+from glob import glob
+
 website_location = "/usr/share/nginx/html/"
+
+def run_all(parent_directory_path: str) -> bool:
+
+    # Finds all MarkDown files within the directory.
+    all_files = glob(f"{parent_directory_path}/**/*.md", recursive=True)
+
+    for filename in all_files:
+
+        # shortened_filename = filename.replace(f"{parent_directory_path}/", "")
+
+        create_single_file(filename)
+
+        print(filename)
+
+
+
+    print(all_files)
+    pass
 
 def create_single_file(md_path: str) -> bool:
     """Converts a single .md file into a .html page.
@@ -52,19 +72,17 @@ def create_single_file(md_path: str) -> bool:
     HTML_path = website_location + HTML_path
     
 
-
     # Outputs each line of the array into a HTML file
     output_file = open(HTML_path, "w")
     for line in given_array:
         output_file.write(line)
     output_file.close()
 
-
     # Creates a new file in the given path.
     # file = open(HTML_path, "x")
     # file.close()
 
-    # file = open(HTML_path, "w")
+    # file = open(HTML_path, "w")http://192.168.1.113:1008/Test.html
     # file.write("Hey there!")
     # file.close()
 
@@ -75,4 +93,7 @@ def create_single_file(md_path: str) -> bool:
 if __name__ == "__main__":
     print("Yep")
 
-    create_single_file("/Vault/" + "Test.md")
+    # create_single_file("/Vault/" + "Test.md")http://192.168.1.113:1008/Test.html
+
+    run_all("Vault")
+

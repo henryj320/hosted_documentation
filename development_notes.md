@@ -124,3 +124,7 @@ Last update: 2023-06-07 23:53
             - It shows the file!
     - So, in summary: The volume needs to be recreated to work.
 10. Making it so that all Markdown files inside of "Vault" are converted into .html, not just specific ones
+    - Changing the code
+    - It now makes all of the files, but doesn't retain the subdirectories
+        - That's a good start. I'll make it retain the subdirectories at a later point
+
