@@ -46,9 +46,9 @@ def create_single_file(md_path: str) -> bool:
     # Stores each line from the input .md in an array.
     count = 0
     given_array = [
-        "<!DOCTYPE html>",
         "<html>",
         "<head>",
+        "<link rel='stylesheet' href='/Config/master.css'>",
         "</head>",
         "<body>"
         ]

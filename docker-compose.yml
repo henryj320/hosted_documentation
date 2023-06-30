@@ -10,6 +10,9 @@ services:
     volumes:
       - hosted-documentation-volume-vault:/Vault
       - hosted-documentation-volume-html:/usr/share/nginx/html
+      # - ./Config:/usr/share/nginx/html/Config  # Allows live changes to the CSS.
+
+
   api:
     container_name: hosted-documentation-api
     build:

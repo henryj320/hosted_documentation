@@ -144,4 +144,9 @@ Last update: 2023-06-30 15:44
             - http://192.168.1.113:1008/Vault/Example.html
             - http://192.168.1.113:1008/Vault/Testing_Subdirectories/TEstingSubSub/Subsub.html
             - All are working
+11. Adding CSS
+    - Added a config file
+        - ` hosted-documentation-volume-config:/Config `
+        - Nevermind, just copying it into the nginx folder.
+    - Added lots of customisation.
 
