@@ -1,6 +1,6 @@
 # hosted_documentation
 
-Last update: 2023-06-07 23:53
+Last update: 2023-06-30 15:44
 <br><br>
 
 ## Development Notes for hosted_documentation
@@ -79,7 +79,7 @@ Last update: 2023-06-07 23:53
             - Yep, its there!
 8. Making a real HTML file from it
     - Adapting main.py
-    - Trying to make it read the correct file#
+    - Trying to make it read the correct file
     - Doesnt seem to be copying "Vault" into the right location.
     - Changed it to have two volumes - one for the vault and another for the HTML
     - The python script still isn't outputting into the right place
@@ -127,4 +127,21 @@ Last update: 2023-06-07 23:53
     - Changing the code
     - It now makes all of the files, but doesn't retain the subdirectories
         - That's a good start. I'll make it retain the subdirectories at a later point
+        - Added a TODO on line 73 for where to do it.
+    - Testing it worked
+        - ` docker compose down -v `
+        - ` docker compose build --no-cache `
+        - ` docker compose up -d `
+        - ` docker exec -it hosted-documentation-nginx sh `
+        - The code isnt in there
+        - ` docker logs hosted-documentation-api `
+            - FileNotFoundError: [Errno 2] No such file or directory: 'usr/share/nginx/html/Vault/Example.html'
+            - Removed this line: ` # directories_to_add += "Output/" `
+                - Didnt change anything
+        - ` directories_to_add = website_location `
+            - So that it starts at "/usr/share/nginx/html" instead of "/"
+                - That worked
+            - http://192.168.1.113:1008/Vault/Example.html
+            - http://192.168.1.113:1008/Vault/Testing_Subdirectories/TEstingSubSub/Subsub.html
+            - All are working
 

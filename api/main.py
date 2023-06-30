@@ -1,7 +1,10 @@
 """Main script to convert Markdown files into HTML files."""
 from glob import glob
+import os
+from pathlib import Path
 
 website_location = "/usr/share/nginx/html/"
+# website_location = "Output/"
 
 def run_all(parent_directory_path: str) -> bool:
 
@@ -67,8 +70,44 @@ def create_single_file(md_path: str) -> bool:
     # Finds the path that the HTML page will be
     HTML_path = md_path.split(".md")[0].replace(" ", "_") + ".html"
 
+
     HTML_path_split = HTML_path.split("/")
-    HTML_path = HTML_path_split[len(HTML_path_split)-1]
+
+    directories = HTML_path_split
+    directories.pop()  # Removes the file from directories array.
+
+    # Creates a path of all directories (e.g. First_Dir/Sec_Dir)
+    directories_to_add = website_location
+
+    # directories_to_add += "Output/"  # TODO: Remove in output
+
+    for index, directory in enumerate(directories):
+
+        directory = directory.replace(" ", "_")
+
+        directories_to_add = directories_to_add + directory
+
+        if index != len(directories) - 1:
+            directories_to_add = directories_to_add + "/"
+
+    path = Path(directories_to_add)
+
+    os.makedirs(directories_to_add, exist_ok=True)
+        
+
+        # if not os.path.exists(directory):
+            # os.makedirs(directory)
+
+    print(directories)
+    print(directories_to_add)
+
+    for entry in HTML_path_split:
+        print("Entry: " + entry)
+
+    # TODO: Create the directories to place into those files.
+
+    # Removes everything except the filename.html.
+    # HTML_path = HTML_path_split[len(HTML_path_split)-1]
     HTML_path = website_location + HTML_path
     
 
