@@ -149,4 +149,7 @@ Last update: 2023-06-30 15:44
         - ` hosted-documentation-volume-config:/Config `
         - Nevermind, just copying it into the nginx folder.
     - Added lots of customisation.
+12. Converting Markdown to HTML
+    - Added conversion for Headers
+    - Converted "***" into ` <b><i>Text</i></b>
 

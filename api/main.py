@@ -60,6 +60,69 @@ def create_single_file(md_path: str) -> bool:
         # Removes the newline from the end of each line.
         line = line.split("\n")[0]
 
+        # Converting headers.
+        if "######" in line:
+            line_split = line.split("###### ")[1]
+            line = f"<h6>{line_split}</h6>"
+        elif "#####" in line:
+            line_split = line.split("##### ")[1]
+            line = f"<h5>{line_split}</h5>"
+        elif "####" in line:
+            line_split = line.split("#### ")[1]
+            line = f"<h4>{line_split}</h4>"
+        elif "###" in line:
+            line_split = line.split("### ")[1]
+            line = f"<h3>{line_split}</h3>"
+        elif "##" in line:
+            line_split = line.split("## ")[1]
+            line = f"<h2>{line_split}</h2>"
+        elif "#" in line:
+            line_split = line.split("# ")[1]
+            line = f"<h1>{line_split}</h1>"
+
+        # Converts all other lines into paragraphs.
+        elif line != "":
+            line = f"<p>{line}</p>"
+        
+
+        # Converting bold & italic, bold and italic instances.
+        if "***" in line:
+
+            location = line.find("***")  # Finds where the next "***" is.
+            opened_tag = True
+            new_line = line[:location] + "<b><i>"
+
+            line = line[(location + 3):]  # Removes the beginning of line.
+            location = line.find("***")  
+
+            # Loop until no more "***"
+            while location != -1:
+
+                if not opened_tag:
+                    new_line = f"{new_line}{line[:location]}<b><i>"
+
+                    opened_tag = True
+
+                else:
+                    new_line = f"{new_line}{line[:location]}</i></b>"
+                    opened_tag = False
+
+
+                # Removes the beginning of the line.
+                line = line[(location + 3):]
+
+                # Finds the next instance of "***"
+                location = line.find("***")
+
+
+            # Adds the final to the line after no more "***" is found.
+            new_line += line
+
+            line = new_line
+
+
+
+
         given_array.append(line)
 
 
@@ -93,10 +156,6 @@ def create_single_file(md_path: str) -> bool:
     path = Path(directories_to_add)
 
     os.makedirs(directories_to_add, exist_ok=True)
-        
-
-        # if not os.path.exists(directory):
-            # os.makedirs(directory)
 
     print(directories)
     print(directories_to_add)
