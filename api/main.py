@@ -53,12 +53,14 @@ def create_single_file(md_path: str) -> bool:
         "<body>"
         ]
     
+    code_block_entered = False
     # Adds each line from the MarkDown into the array.
     for line in given_lines:
         count += 1
 
         # Removes the newline from the end of each line.
         line = line.split("\n")[0]
+
 
         # Converting headers.
         if "######" in line:
@@ -80,6 +82,10 @@ def create_single_file(md_path: str) -> bool:
             line_split = line.split("# ")[1]
             line = f"<h1>{line_split}</h1>"
 
+        elif "---" in line:
+            line = "<hr>"
+
+
         # Converts all other lines into paragraphs.
         elif line != "":
             line = f"<p>{line}</p>"
@@ -87,7 +93,6 @@ def create_single_file(md_path: str) -> bool:
 
         # Converting bold & italic, bold and italic instances.
         if "***" in line:
-
             location = line.find("***")  # Finds where the next "***" is.
             opened_tag = True
             new_line = line[:location] + "<b><i>"
@@ -100,13 +105,10 @@ def create_single_file(md_path: str) -> bool:
 
                 if not opened_tag:
                     new_line = f"{new_line}{line[:location]}<b><i>"
-
                     opened_tag = True
-
                 else:
                     new_line = f"{new_line}{line[:location]}</i></b>"
                     opened_tag = False
-
 
                 # Removes the beginning of the line.
                 line = line[(location + 3):]
@@ -114,11 +116,83 @@ def create_single_file(md_path: str) -> bool:
                 # Finds the next instance of "***"
                 location = line.find("***")
 
+            # Adds the final to the line after no more "***" is found.
+            new_line += line
+            line = new_line
+
+
+        # Converting Bold to HTML
+        elif "**" in line:
+            location = line.find("**")  # Finds where the next "***" is.
+            opened_tag = True
+            new_line = line[:location] + "<b>"
+
+            line = line[(location + 2):]  # Removes the beginning of line.
+            location = line.find("**")  
+
+            # Loop until no more "***"
+            while location != -1:
+
+                if not opened_tag:
+                    new_line = f"{new_line}{line[:location]}<b>"
+                    opened_tag = True
+                else:
+                    new_line = f"{new_line}{line[:location]}</b>"
+                    opened_tag = False
+
+
+                # Removes the beginning of the line.
+                line = line[(location + 2):]
+
+                # Finds the next instance of "***"
+                location = line.find("**")
 
             # Adds the final to the line after no more "***" is found.
             new_line += line
-
             line = new_line
+        
+
+        # Converting Italic to HTML
+        elif "*" in line:
+            location = line.find("*")  # Finds where the next "***" is.
+            opened_tag = True
+            new_line = line[:location] + "<i>"
+
+            line = line[(location + 1):]  # Removes the beginning of line.
+            location = line.find("*")  
+
+            # Loop until no more "***"
+            while location != -1:
+
+                if not opened_tag:
+                    new_line = f"{new_line}{line[:location]}<i>"
+                    opened_tag = True
+                else:
+                    new_line = f"{new_line}{line[:location]}</i>"
+                    opened_tag = False
+
+
+                # Removes the beginning of the line.
+                line = line[(location + 1):]
+
+                # Finds the next instance of "***"
+                location = line.find("*")
+
+            # Adds the final to the line after no more "***" is found.
+            new_line += line
+            line = new_line
+        
+
+        # Coverting code blocks to HTML
+        if "```" in line:
+            # Opening a code block
+            if not code_block_entered:
+                line = "<div class='codeBlock'>"
+                code_block_entered = True
+
+            else:
+                line = "</div>"
+                code_block_entered = False
 
 
 

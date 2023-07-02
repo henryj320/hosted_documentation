@@ -150,6 +150,7 @@ Last update: 2023-06-30 15:44
         - Nevermind, just copying it into the nginx folder.
     - Added lots of customisation.
 12. Converting Markdown to HTML
-    - Added conversion for Headers
-    - Converted "***" into ` <b><i>Text</i></b>
-
+    - Added conversion for Headers.
+    - Converted "***" into ` <b><i>Text</i></b>.
+    - Got Bold and Italic working again.
+    - Converting code blocks.
