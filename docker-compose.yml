@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  nginx:
+    container_name: hosted-documentation-nginx
+    build:
+      context: ./
+      dockerfile: website.Dockerfile
+    ports:
+      - "192.168.1.113:1008:80"
+    volumes:
+      - hosted-documentation-volume-vault:/Vault
+      - hosted-documentation-volume-html:/usr/share/nginx/html
+      # - ./Config:/usr/share/nginx/html/Config  # Allows live changes to the CSS.
+
+
+  api:
+    container_name: hosted-documentation-api
+    build:
+      context: ./
+      dockerfile: api/api.Dockerfile
+    volumes:
+      - hosted-documentation-volume-vault:/Vault
+      - hosted-documentation-volume-html:/usr/share/nginx/html
+volumes:
+  hosted-documentation-volume-vault:
+    name: "hosted-documentation-volume-vault"
+  hosted-documentation-volume-html:
+    name: "hosted-documentation-volume-html"

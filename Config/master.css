@@ -1,0 +1,89 @@
+* {
+    color: #e7e7e7;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    letter-spacing: 0.01vw;
+}
+
+html {
+    background-image: linear-gradient(to right top, #222326, #26282c, #292d31, #2d3237, #30373d, #30373d, #30373d, #30373d, #2d3237, #292d31, #26282c, #222326);
+    background-size: cover;
+}
+
+body {
+    background-image: linear-gradient(to left bottom, #222326, #242527, #252629, #27282a, #292a2c, #292a2c, #292a2c, #292a2c, #27282a, #252629, #242527, #222326);
+    
+    border-left: 2px solid #1e1f22;
+    border-right: 2px solid #1e1f22;
+
+    width: 80vw;
+
+    margin-left: 7vw;
+    margin-right: 7vw;
+    margin-top: 0vh;
+    margin-bottom: 0vh;
+
+    padding-left: 3vw;
+    padding-right: 3vw;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+
+    overflow-x: hidden;
+    
+}
+
+img {
+    width: 60vw;
+    margin-left: 10vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
+    border: 0.175vw solid #343E44;
+    border-radius: 12px;
+
+}
+
+p {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    letter-spacing: 0px;
+    font-size: 1em;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    color: #cfcfcf;
+    font-size: 1.8em;
+}
+
+h3 {
+    color: #a7a7a7;
+    font-size: 1.6em;
+}
+
+h4 {
+    color: #8a8a8a;
+    font-size: 1.4em;
+    
+}
+
+hr {
+    height: 0.175vh;
+    background-color: #343E44;
+    border: none;
+    margin-left: 10vw;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+    width: 60.35vw;
+}
+
+.codeBlock {
+    border: 1px solid #222326;
+    background: #30373d;
+    border-radius: 12px;
+    padding: 0vw 1.5vw;
+}
+
+.codeBlock p {
+    color: #9c9c9c;
+}
