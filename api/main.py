@@ -38,170 +38,6 @@ def create_single_file(md_path: str) -> bool:
         return False
     
 
-    given_file = open(md_path, 'r')
-    given_lines = given_file.readlines()
-    given_file.close()
-
-
-    # Stores each line from the input .md in an array.
-    count = 0
-    given_array = [
-        "<html>",
-        "<head>",
-        "<link rel='stylesheet' href='/Config/master.css'>",
-        "</head>",
-        "<body>"
-        ]
-    
-    code_block_entered = False
-    # Adds each line from the MarkDown into the array.
-    for line in given_lines:
-        count += 1
-
-        # Removes the newline from the end of each line.
-        line = line.split("\n")[0]
-
-
-        # Converting headers.
-        if "######" in line:
-            line_split = line.split("###### ")[1]
-            line = f"<h6>{line_split}</h6>"
-        elif "#####" in line:
-            line_split = line.split("##### ")[1]
-            line = f"<h5>{line_split}</h5>"
-        elif "####" in line:
-            line_split = line.split("#### ")[1]
-            line = f"<h4>{line_split}</h4>"
-        elif "###" in line:
-            line_split = line.split("### ")[1]
-            line = f"<h3>{line_split}</h3>"
-        elif "##" in line:
-            line_split = line.split("## ")[1]
-            line = f"<h2>{line_split}</h2>"
-        elif "#" in line:
-            line_split = line.split("# ")[1]
-            line = f"<h1>{line_split}</h1>"
-
-        elif "---" in line:
-            line = "<hr>"
-
-
-        # Converts all other lines into paragraphs.
-        elif line != "":
-            line = f"<p>{line}</p>"
-        
-
-        # Converting bold & italic, bold and italic instances.
-        if "***" in line:
-            location = line.find("***")  # Finds where the next "***" is.
-            opened_tag = True
-            new_line = line[:location] + "<b><i>"
-
-            line = line[(location + 3):]  # Removes the beginning of line.
-            location = line.find("***")  
-
-            # Loop until no more "***"
-            while location != -1:
-
-                if not opened_tag:
-                    new_line = f"{new_line}{line[:location]}<b><i>"
-                    opened_tag = True
-                else:
-                    new_line = f"{new_line}{line[:location]}</i></b>"
-                    opened_tag = False
-
-                # Removes the beginning of the line.
-                line = line[(location + 3):]
-
-                # Finds the next instance of "***"
-                location = line.find("***")
-
-            # Adds the final to the line after no more "***" is found.
-            new_line += line
-            line = new_line
-
-
-        # Converting Bold to HTML
-        elif "**" in line:
-            location = line.find("**")  # Finds where the next "***" is.
-            opened_tag = True
-            new_line = line[:location] + "<b>"
-
-            line = line[(location + 2):]  # Removes the beginning of line.
-            location = line.find("**")  
-
-            # Loop until no more "***"
-            while location != -1:
-
-                if not opened_tag:
-                    new_line = f"{new_line}{line[:location]}<b>"
-                    opened_tag = True
-                else:
-                    new_line = f"{new_line}{line[:location]}</b>"
-                    opened_tag = False
-
-
-                # Removes the beginning of the line.
-                line = line[(location + 2):]
-
-                # Finds the next instance of "***"
-                location = line.find("**")
-
-            # Adds the final to the line after no more "***" is found.
-            new_line += line
-            line = new_line
-        
-
-        # Converting Italic to HTML
-        elif "*" in line:
-            location = line.find("*")  # Finds where the next "***" is.
-            opened_tag = True
-            new_line = line[:location] + "<i>"
-
-            line = line[(location + 1):]  # Removes the beginning of line.
-            location = line.find("*")  
-
-            # Loop until no more "***"
-            while location != -1:
-
-                if not opened_tag:
-                    new_line = f"{new_line}{line[:location]}<i>"
-                    opened_tag = True
-                else:
-                    new_line = f"{new_line}{line[:location]}</i>"
-                    opened_tag = False
-
-
-                # Removes the beginning of the line.
-                line = line[(location + 1):]
-
-                # Finds the next instance of "***"
-                location = line.find("*")
-
-            # Adds the final to the line after no more "***" is found.
-            new_line += line
-            line = new_line
-        
-
-        # Coverting code blocks to HTML
-        if "```" in line:
-            # Opening a code block
-            if not code_block_entered:
-                line = "<div class='codeBlock'>"
-                code_block_entered = True
-
-            else:
-                line = "</div>"
-                code_block_entered = False
-
-
-
-
-        given_array.append(line)
-
-
-    given_array.append("</body>")
-    given_array.append("</html>")
 
 
     # Finds the path that the HTML page will be
@@ -242,6 +78,234 @@ def create_single_file(md_path: str) -> bool:
     # Removes everything except the filename.html.
     # HTML_path = HTML_path_split[len(HTML_path_split)-1]
     HTML_path = website_location + HTML_path
+
+
+
+    
+
+    given_file = open(md_path, 'r')
+    given_lines = given_file.readlines()
+    given_file.close()
+
+
+    # Stores each line from the input .md in an array.
+    count = 0
+    given_array = [
+        "<html>",
+        "<head>",
+        "<link rel='stylesheet' href='/Config/master.css'>",
+        "</head>",
+        "<body>"
+        ]
+    
+    code_block_entered = False
+    # Adds each line from the MarkDown into the array.
+    for line in given_lines:
+        count += 1
+
+        # Removes the newline from the end of each line.
+        line = line.split("\n")[0]
+
+
+
+        
+
+        image_present = False
+        image_extensions = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".gif", ".eps", ".raw"]
+
+        # Converts images
+        for ext in image_extensions:
+            if ext in line and "![" in line:
+
+                image_present = True
+
+
+                                                                            # ![](../Testing%20Subdirectories/Test_img.png)
+                url_split = line.split("(")[1]  # Removes "![](".
+                url_split = url_split.split(")")[0]  # Removes ")".
+
+                url_split = url_split.split("/")                            # ['..', 'Testing%20Subdirectories', 'Test_img.png']
+
+                # If image is not in a subfolder.
+                if len(url_split) == 1:
+                    line = f"<img src='{url_split[0]}'>"
+                    image_present = True
+                else:
+
+
+                
+                    print("URL Split:")
+                    print(url_split)                            # ['![](..', 'Testing%20Subdirectories', 'Test_img.png)']
+
+                    filename = url_split.pop()  # Takes the filename and removes the end ")".
+
+                    url_split.pop(0) # Removes the "![](".
+
+                    full_path = "./Vault/"
+                    for directory in url_split:
+                        full_path += directory + "/"                            # Vault/Testing%20Subdirectories/
+                
+                    full_path += filename                                       # Vault/Testing%20Subdirectories/Test_img.png
+
+
+                    line = f"<img src='{full_path}'>"
+
+                    image_present = True
+                    # break
+
+                # TODO: Generate the correct URL
+                # Should be something like:
+                    # Source: ../Testing%20Subdirectories/Test_img.png
+                    # HTML:   Vault/Testing Subdirectories/Test_img.png
+                    # Use urllib.parse.unquote(source)
+            
+        if not image_present:
+            
+
+
+
+            # Converting headers.
+            if "######" in line:
+                line_split = line.split("###### ")[1]
+                line = f"<h6>{line_split}</h6>"
+            elif "#####" in line:
+                line_split = line.split("##### ")[1]
+                line = f"<h5>{line_split}</h5>"
+            elif "####" in line:
+                line_split = line.split("#### ")[1]
+                line = f"<h4>{line_split}</h4>"
+            elif "###" in line:
+                line_split = line.split("### ")[1]
+                line = f"<h3>{line_split}</h3>"
+            elif "##" in line:
+                line_split = line.split("## ")[1]
+                line = f"<h2>{line_split}</h2>"
+            elif "#" in line:
+                line_split = line.split("# ")[1]
+                line = f"<h1>{line_split}</h1>"
+
+            elif "---" in line:
+                line = "<hr>"
+
+
+            # Converts all other lines into paragraphs.
+            elif line != "":
+                line = f"<p>{line}</p>"
+
+        # ![](../../Test_img.png)
+        
+
+            # Converting bold & italic, bold and italic instances.
+            if "***" in line:
+                location = line.find("***")  # Finds where the next "***" is.
+                opened_tag = True
+                new_line = line[:location] + "<b><i>"
+
+                line = line[(location + 3):]  # Removes the beginning of line.
+                location = line.find("***")  
+
+                # Loop until no more "***"
+                while location != -1:
+
+                    if not opened_tag:
+                        new_line = f"{new_line}{line[:location]}<b><i>"
+                        opened_tag = True
+                    else:
+                        new_line = f"{new_line}{line[:location]}</i></b>"
+                        opened_tag = False
+
+                    # Removes the beginning of the line.
+                    line = line[(location + 3):]
+
+                    # Finds the next instance of "***"
+                    location = line.find("***")
+
+                # Adds the final to the line after no more "***" is found.
+                new_line += line
+                line = new_line
+
+
+            # Converting Bold to HTML
+            elif "**" in line:
+                location = line.find("**")  # Finds where the next "***" is.
+                opened_tag = True
+                new_line = line[:location] + "<b>"
+
+                line = line[(location + 2):]  # Removes the beginning of line.
+                location = line.find("**")  
+
+                # Loop until no more "***"
+                while location != -1:
+
+                    if not opened_tag:
+                        new_line = f"{new_line}{line[:location]}<b>"
+                        opened_tag = True
+                    else:
+                        new_line = f"{new_line}{line[:location]}</b>"
+                        opened_tag = False
+
+
+                    # Removes the beginning of the line.
+                    line = line[(location + 2):]
+
+                    # Finds the next instance of "***"
+                    location = line.find("**")
+
+                # Adds the final to the line after no more "***" is found.
+                new_line += line
+                line = new_line
+            
+
+            # Converting Italic to HTML
+            elif "*" in line:
+                location = line.find("*")  # Finds where the next "***" is.
+                opened_tag = True
+                new_line = line[:location] + "<i>"
+
+                line = line[(location + 1):]  # Removes the beginning of line.
+                location = line.find("*")  
+
+                # Loop until no more "***"
+                while location != -1:
+
+                    if not opened_tag:
+                        new_line = f"{new_line}{line[:location]}<i>"
+                        opened_tag = True
+                    else:
+                        new_line = f"{new_line}{line[:location]}</i>"
+                        opened_tag = False
+
+
+                    # Removes the beginning of the line.
+                    line = line[(location + 1):]
+
+                    # Finds the next instance of "***"
+                    location = line.find("*")
+
+                # Adds the final to the line after no more "***" is found.
+                new_line += line
+                line = new_line
+            
+
+            # Coverting code blocks to HTML
+            if "```" in line:
+                # Opening a code block
+                if not code_block_entered:
+                    line = "<div class='codeBlock'>"
+                    code_block_entered = True
+
+                else:
+                    line = "</div>"
+                    code_block_entered = False
+
+
+
+
+        given_array.append(line)
+
+
+    given_array.append("</body>")
+    given_array.append("</html>")
     
 
     # Outputs each line of the array into a HTML file

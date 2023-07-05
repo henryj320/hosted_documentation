@@ -1,6 +1,6 @@
 # hosted_documentation
 
-Last update: 2023-06-30 15:44
+Last update: 2023-07-05 21:34
 <br><br>
 
 ## Development Notes for hosted_documentation
@@ -154,3 +154,7 @@ Last update: 2023-06-30 15:44
     - Converted "***" into ` <b><i>Text</i></b>.
     - Got Bold and Italic working again.
     - Converting code blocks.
+    - Making it work with images.
+        - One issue:
+            - Having a src like "./Vault/Separate_Direct/Test_img.png" wont work, because it is looking for images inside of "/usr/share/nginx/html"
+            - Copied the images into "/usr/share/nginx/html" instead (in their respective folders)
