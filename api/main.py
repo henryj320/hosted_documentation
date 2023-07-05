@@ -4,25 +4,16 @@ import os
 from pathlib import Path
 
 website_location = "/usr/share/nginx/html/"
-# website_location = "Output/"
+# Testing: website_location = "Output/"
 
 def run_all(parent_directory_path: str) -> bool:
-
     # Finds all MarkDown files within the directory.
     all_files = glob(f"{parent_directory_path}/**/*.md", recursive=True)
 
+    # Converts all .md files into .html.
     for filename in all_files:
-
-        # shortened_filename = filename.replace(f"{parent_directory_path}/", "")
-
         create_single_file(filename)
 
-        print(filename)
-
-
-
-    print(all_files)
-    pass
 
 def create_single_file(md_path: str) -> bool:
     """Converts a single .md file into a .html page.
@@ -36,9 +27,6 @@ def create_single_file(md_path: str) -> bool:
 
     if not isinstance(md_path, str):
         return False
-    
-
-
 
     # Finds the path that the HTML page will be
     HTML_path = md_path.split(".md")[0].replace(" ", "_") + ".html"
@@ -49,40 +37,26 @@ def create_single_file(md_path: str) -> bool:
     directories = HTML_path_split
     directories.pop()  # Removes the file from directories array.
 
-    # Creates a path of all directories (e.g. First_Dir/Sec_Dir)
+    # Creates a path of all directories (e.g. First_Dir/Sec_Dir).
     directories_to_add = website_location
 
-    # directories_to_add += "Output/"  # TODO: Remove in output
-
+    # Replaces " " with "_" to create a full path of directories to add.
     for index, directory in enumerate(directories):
-
         directory = directory.replace(" ", "_")
-
         directories_to_add = directories_to_add + directory
 
         if index != len(directories) - 1:
             directories_to_add = directories_to_add + "/"
 
+    # Makes each directory recursively.
     path = Path(directories_to_add)
-
     os.makedirs(directories_to_add, exist_ok=True)
 
-    print(directories)
-    print(directories_to_add)
-
-    for entry in HTML_path_split:
-        print("Entry: " + entry)
-
-    # TODO: Create the directories to place into those files.
 
     # Removes everything except the filename.html.
-    # HTML_path = HTML_path_split[len(HTML_path_split)-1]
     HTML_path = website_location + HTML_path
-
-
-
     
-
+    # Reads the .md file and stores it as an array.
     given_file = open(md_path, 'r')
     given_lines = given_file.readlines()
     given_file.close()
@@ -99,43 +73,34 @@ def create_single_file(md_path: str) -> bool:
         ]
     
     code_block_entered = False
-    # Adds each line from the MarkDown into the array.
+
+    # Adds each line from the .md into the array.
     for line in given_lines:
         count += 1
 
         # Removes the newline from the end of each line.
-        line = line.split("\n")[0]
-
-
-
-        
+        line = line.split("\n")[0]        
 
         image_present = False
         image_extensions = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".gif", ".eps", ".raw"]
 
-        # Converts images
+        # Converts images to HTML format
         for ext in image_extensions:
             if ext in line and "![" in line:
 
                 image_present = True
 
-
-                                                                            # ![](../Testing%20Subdirectories/Test_img.png)
                 url_split = line.split("(")[1]  # Removes "![](".
                 url_split = url_split.split(")")[0]  # Removes ")".
 
-                url_split = url_split.split("/")                            # ['..', 'Testing%20Subdirectories', 'Test_img.png']
+                url_split = url_split.split("/")
 
                 # If image is not in a subfolder.
                 if len(url_split) == 1:
                     line = f"<img src='{url_split[0]}'>"
                     image_present = True
+
                 else:
-
-
-                
-                    print("URL Split:")
-                    print(url_split)                            # ['![](..', 'Testing%20Subdirectories', 'Test_img.png)']
 
                     filename = url_split.pop()  # Takes the filename and removes the end ")".
 
@@ -143,26 +108,17 @@ def create_single_file(md_path: str) -> bool:
 
                     full_path = "./Vault/"
                     for directory in url_split:
-                        full_path += directory + "/"                            # Vault/Testing%20Subdirectories/
+                        full_path += directory + "/"
                 
-                    full_path += filename                                       # Vault/Testing%20Subdirectories/Test_img.png
-
+                    full_path += filename
 
                     line = f"<img src='{full_path}'>"
 
                     image_present = True
-                    # break
-
-                # TODO: Generate the correct URL
-                # Should be something like:
-                    # Source: ../Testing%20Subdirectories/Test_img.png
-                    # HTML:   Vault/Testing Subdirectories/Test_img.png
-                    # Use urllib.parse.unquote(source)
             
+        
+        # Stop converting if line is an image.
         if not image_present:
-            
-
-
 
             # Converting headers.
             if "######" in line:
@@ -191,8 +147,6 @@ def create_single_file(md_path: str) -> bool:
             # Converts all other lines into paragraphs.
             elif line != "":
                 line = f"<p>{line}</p>"
-
-        # ![](../../Test_img.png)
         
 
             # Converting bold & italic, bold and italic instances.
@@ -299,11 +253,9 @@ def create_single_file(md_path: str) -> bool:
                     code_block_entered = False
 
 
-
-
         given_array.append(line)
 
-
+    # Close the body and HTML tags at the end.
     given_array.append("</body>")
     given_array.append("</html>")
     
@@ -313,14 +265,6 @@ def create_single_file(md_path: str) -> bool:
     for line in given_array:
         output_file.write(line)
     output_file.close()
-
-    # Creates a new file in the given path.
-    # file = open(HTML_path, "x")
-    # file.close()
-
-    # file = open(HTML_path, "w")http://192.168.1.113:1008/Test.html
-    # file.write("Hey there!")
-    # file.close()
 
     return True
 

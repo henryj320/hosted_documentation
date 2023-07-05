@@ -158,3 +158,6 @@ Last update: 2023-07-05 21:34
         - One issue:
             - Having a src like "./Vault/Separate_Direct/Test_img.png" wont work, because it is looking for images inside of "/usr/share/nginx/html"
             - Copied the images into "/usr/share/nginx/html" instead (in their respective folders)
+    - Code cleanup
+    - Making it work with tables
+
